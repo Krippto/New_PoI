@@ -19,9 +19,8 @@ function store(e){
     .then((res)=>{
         li.setAttribute('id',`${res.data._id}`)
         var edtBtn = `<button onclick="deleteUser("${res.data._id}")">Delete User</button>`
-        var delBtn = `<button onclick=editUser("${res.data._id}")>Edit User</button>`
-        li.appendChild(edtBtn)
-        li.appendChild(delBtn)
+        var delBtn = `<button onclick=editUser(${res.data._id}','${res.data.name}','${res.data.mail}','${res.data.phone}')>Edit User</button>`
+        li.innerHTML = li.innerHTML + edtBtn + delBtn
     })
     .catch((err)=>{
         console.log(err)
@@ -40,8 +39,18 @@ function deleteUser(id){
     .catch((err)=>{
         console.log(err)
     })
-    document.getElementById(id).parentElement.remove()
+    let eleToBeRemoved = document.getElementById(id)
+    let bigEle = document.getElementById('toAdd')
+    bigEle.removeChild(eleToBeRemoved)
 }
+
+function editUser(id, name, mail, phone){
+    document.getElementById('name').value = name
+    document.getElementById('email').value = mail
+    document.getElementById('phone').value = phone
+    deleteUser(id)
+}
+
 window.addEventListener('DOMContentLoaded',()=>{
     axios.get("https://crudcrud.com/api/360c744e7f504664a4d3c9f6dd902c3d/appointmentData")
     .then((res)=>{
@@ -49,7 +58,7 @@ window.addEventListener('DOMContentLoaded',()=>{
             //const li = document.createElement('li')
             //var edtBtn = `<button onclick=deleteUser(${res.data[i]._id})>Delete User</button>`
             //var delBtn = `<button onclick=editUser(${res.data[i]._id})>Edit User</button>`
-            const li = `<li id=${res.data[i]._id}> ${res.data[i].name} - ${res.data[i].mail} - ${res.data[i].phone}<button onclick="deleteUser('${res.data[i]._id}')">Delete User</button><button onclick="editUser('${res.data[i]._id}')">Edit User</button></li>`
+            const li = `<li id=${res.data[i]._id}> ${res.data[i].name} - ${res.data[i].mail} - ${res.data[i].phone}<button onclick="deleteUser('${res.data[i]._id}')">Delete User</button><button onclick="editUser('${res.data[i]._id}','${res.data[i].name}','${res.data[i].mail}','${res.data[i].phone}')">Edit User</button></li>`
             //li.appendChild(edtBtn)
             //li.appendChild(delBtn)
             document.getElementById('toAdd').innerHTML = document.getElementById('toAdd').innerHTML + li
